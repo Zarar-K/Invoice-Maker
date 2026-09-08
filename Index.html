@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice Maker</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f3f4f6;
+  color:#111827;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+h2{
+  margin-top:0;
+  font-size:20px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:6px 0 12px;
+  border:1px solid #d1d5db;
+  border-radius:8px;
+  font-size:15px;
+}
+
+button{
+  border:0;
+  padding:12px 18px;
+  border-radius:8px;
+  background:#111827;
+  color:white;
+  font-size:15px;
+  cursor:pointer;
+  margin:5px 0;
+}
+
+button:hover{
+  opacity:.9;
+}
+
+.item{
+  border:1px solid #e5e7eb;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:10px;
+}
+
+.remove{
+  background:#dc2626;
+}
+
+.add{
+  background:#2563eb;
+}
+
+.generate{
+  background:#16a34a;
+  width:100%;
+  font-size:17px;
+}
+
+.invoice{
+  background:white;
+  padding:30px;
+  margin-top:20px;
+  display:none;
+}
+
+.invoice-header{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  border-bottom:2px solid #111827;
+  padding-bottom:15px;
+}
+
+.invoice-title{
+  font-size:30px;
+  font-weight:bold;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:25px;
+}
+
+th,td{
+  padding:10px;
+  border-bottom:1px solid #ddd;
+  text-align:left;
+}
+
+.total{
+  margin-top:20px;
+  text-align:right;
+  font-size:18px;
+}
+
+.grand{
+  font-size:24px;
+  font-weight:bold;
+}
+
+@media(max-width:600px){
+  .invoice-header{
+    flex-direction:column;
+  }
+
+  .invoice{
+    padding:18px;
+  }
+
+  table{
+    font-size:13px;
+  }
+}
+
+@media print{
+  body{
+    background:white;
+  }
+
+  .container > *:not(.invoice){
+    display:none;
+  }
+
+  .invoice{
+    display:block !important;
+    box-shadow:none;
+    margin:0;
+  }
+
+  @page{
+    margin:15mm;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🧾 Invoice Maker</h1>
+
+<div class="card">
+
+<h2>Business Information</h2>
+
+<input id="businessName" placeholder="Business Name">
+<input id="businessPhone" placeholder="Phone Number">
+<input id="businessAddress" placeholder="Business Address">
+
+</div>
+
+
+<div class="card">
+
+<h2>Customer Information</h2>
+
+<input id="customerName" placeholder="Customer Name">
+<input id="customerPhone" placeholder="Customer Phone">
+
+</div>
+
+
+<div class="card">
+
+<h2>Invoice Information</h2>
+
+<input id="invoiceNumber" placeholder="Invoice Number">
+<input id="invoiceDate" type="date">
+
+</div>
+
+
+<div class="card">
+
+<h2>Products / Services</h2>
+
+<div id="items"></div>
+
+<button class="add" onclick="addItem()">+ Add Product</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>Discount</h2>
+
+<input id="discount" type="number" placeholder="Discount amount" value="0">
+
+<button class="generate" onclick="generateInvoice()">
+Generate Invoice
+</button>
+
+</div>
+
+
+<div id="invoice" class="invoice">
+
+<div class="invoice-header">
+
+<div>
+<div class="invoice-title">INVOICE</div>
+<h2 id="outBusiness"></h2>
+<div id="outPhone"></div>
+<div id="outAddress"></div>
+</div>
+
+<div>
+<strong>Invoice #:</strong>
+<span id="outNumber"></span>
+<br>
+<strong>Date:</strong>
+<span id="outDate"></span>
+</div>
+
+</div>
+
+
+<div style="margin-top:25px">
+
+<strong>Bill To:</strong>
+
+<div id="outCustomer"></div>
+<div id="outCustomerPhone"></div>
+
+</div>
+
+
+<table>
+
+<thead>
+<tr>
+<th>Item</th>
+<th>Qty</th>
+<th>Price</th>
+<th>Total</th>
+</tr>
+</thead>
+
+<tbody id="outItems"></tbody>
+
+</table>
+
+
+<div class="total">
+
+<div>
+Subtotal:
+<strong>Rs <span id="outSubtotal">0</span></strong>
+</div>
+
+<div>
+Discount:
+<strong>Rs <span id="outDiscount">0</span></strong>
+</div>
+
+<div class="grand">
+Total:
+Rs <span id="outTotal">0</span>
+</div>
+
+</div>
+
+
+<div style="margin-top:40px;text-align:center">
+
+<button onclick="window.print()">🖨️ Print / Save PDF</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+let itemCount=0;
+
+
+function addItem(){
+
+itemCount++;
+
+const div=document.createElement("div");
+
+div.className="item";
+
+div.id="item"+itemCount;
+
+div.innerHTML=`
+
+<input class="itemName" placeholder="Product / Service">
+
+<input class="itemQty"
+type="number"
+placeholder="Quantity"
+value="1"
+min="1">
+
+<input class="itemPrice"
+type="number"
+placeholder="Price"
+value="0"
+min="0">
+
+<button class="remove"
+onclick="removeItem(${itemCount})">
+Remove
+</button>
+
+`;
+
+document.getElementById("items").appendChild(div);
+
+}
+
+
+function removeItem(id){
+
+const item=document.getElementById("item"+id);
+
+if(item){
+item.remove();
+}
+
+}
+
+
+function generateInvoice(){
+
+const businessName=
+document.getElementById("businessName").value || "Your Business";
+
+const businessPhone=
+document.getElementById("businessPhone").value;
+
+const businessAddress=
+document.getElementById("businessAddress").value;
+
+const customerName=
+document.getElementById("customerName").value || "Walk-in Customer";
+
+const customerPhone=
+document.getElementById("customerPhone").value;
+
+const invoiceNumber=
+document.getElementById("invoiceNumber").value || "001";
+
+const date=
+document.getElementById("invoiceDate").value ||
+new Date().toLocaleDateString();
+
+const discount=
+Number(document.getElementById("discount").value) || 0;
+
+
+document.getElementById("outBusiness").textContent=businessName;
+document.getElementById("outPhone").textContent=businessPhone;
+document.getElementById("outAddress").textContent=businessAddress;
+
+document.getElementById("outCustomer").textContent=customerName;
+document.getElementById("outCustomerPhone").textContent=customerPhone;
+
+document.getElementById("outNumber").textContent=invoiceNumber;
+document.getElementById("outDate").textContent=date;
+
+
+const items=
+document.querySelectorAll("#items .item");
+
+const output=
+document.getElementById("outItems");
+
+output.innerHTML="";
+
+let subtotal=0;
+
+
+items.forEach(item=>{
+
+const name=
+item.querySelector(".itemName").value || "Item";
+
+const qty=
+Number(item.querySelector(".itemQty").value) || 0;
+
+const price=
+Number(item.querySelector(".itemPrice").value) || 0;
+
+const total=qty*price;
+
+subtotal+=total;
+
+
+const row=document.createElement("tr");
+
+row.innerHTML=`
+
+<td>${name}</td>
+<td>${qty}</td>
+<td>Rs ${price.toLocaleString()}</td>
+<td>Rs ${total.toLocaleString()}</td>
+
+`;
+
+output.appendChild(row);
+
+});
+
+
+const finalTotal=Math.max(0,subtotal-discount);
+
+
+document.getElementById("outSubtotal").textContent=
+subtotal.toLocaleString();
+
+document.getElementById("outDiscount").textContent=
+discount.toLocaleString();
+
+document.getElementById("outTotal").textContent=
+finalTotal.toLocaleString();
+
+
+document.getElementById("invoice").style.display="block";
+
+window.scrollTo({
+top:document.getElementById("invoice").offsetTop,
+behavior:"smooth"
+});
+
+}
+
+
+// Add first item automatically
+addItem();
+
+
+// Today's date
+document.getElementById("invoiceDate").value=
+new Date().toISOString().split("T")[0];
+
+</script>
+
+</body>
+  </html>
