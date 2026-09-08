@@ -23,6 +23,7 @@ body{
 }
 
 h1{text-align:center;margin-bottom:20px}
+h2{margin-top:0;font-size:20px}
 
 .card{
   background:white;
@@ -32,8 +33,6 @@ h1{text-align:center;margin-bottom:20px}
   box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-h2{margin-top:0;font-size:20px}
-
 label{
   display:block;
   font-weight:bold;
@@ -41,12 +40,13 @@ label{
   margin-bottom:5px;
 }
 
-input{
+input,select{
   width:100%;
   padding:11px;
   border:1px solid #d1d5db;
   border-radius:7px;
   font-size:15px;
+  background:white;
 }
 
 button{
@@ -61,7 +61,6 @@ button{
 .tabs{
   display:flex;
   gap:10px;
-  margin-bottom:15px;
 }
 
 .tab{
@@ -147,7 +146,9 @@ button{
   text-align:left;
 }
 
-.output th{background:#f3f4f6}
+.output th{
+  background:#f3f4f6;
+}
 
 .output-total{
   margin-top:20px;
@@ -160,26 +161,60 @@ button{
   margin-top:20px;
 }
 
-.number-info{
-  font-size:13px;
+.small-text{
   color:#6b7280;
-  margin-top:6px;
+  font-size:13px;
+  margin-top:5px;
+}
+
+.saved-list{
+  margin-top:15px;
+}
+
+.saved-card{
+  border:1px solid #ddd;
+  border-radius:8px;
+  padding:10px;
+  margin-top:8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.saved-card button{
+  margin:0;
 }
 
 @media(max-width:600px){
 
-  .container{padding:10px}
+  .container{
+    padding:10px;
+  }
 
-  .item-grid{grid-template-columns:1fr}
+  .item-grid{
+    grid-template-columns:1fr;
+  }
 
-  .output-header{flex-direction:column}
+  .output-header{
+    flex-direction:column;
+  }
 
-  .output{padding:15px}
+  .output{
+    padding:15px;
+  }
+
+  .saved-card{
+    flex-direction:column;
+    align-items:stretch;
+  }
 }
 
 @media print{
 
-  body{background:white}
+  body{
+    background:white;
+  }
 
   .container > *:not(.output){
     display:none !important;
@@ -191,7 +226,9 @@ button{
     margin:0;
   }
 
-  .actions{display:none}
+  .actions{
+    display:none;
+  }
 }
 </style>
 </head>
@@ -235,16 +272,19 @@ Quotation
 <h2>Business Information</h2>
 
 <label>Business Name</label>
+
 <input
 id="businessName"
 placeholder="Your Business Name">
 
 <label>Phone</label>
+
 <input
 id="businessPhone"
 placeholder="03XXXXXXXXX">
 
 <label>Address</label>
+
 <input
 id="businessAddress"
 placeholder="Business Address">
@@ -264,21 +304,51 @@ Clear Saved Profile
 </div>
 
 
-<!-- CUSTOMER -->
+<!-- CUSTOMER MEMORY -->
 
 <div class="card">
 
-<h2>Customer Information</h2>
+<h2>Customers</h2>
+
+<label>Select Saved Customer</label>
+
+<select
+id="customerSelect"
+onchange="selectCustomer()">
+
+<option value="">
+-- New Customer --
+</option>
+
+</select>
+
 
 <label>Customer Name</label>
+
 <input
 id="customerName"
 placeholder="Customer Name">
 
 <label>Customer Phone</label>
+
 <input
 id="customerPhone"
 placeholder="03XXXXXXXXX">
+
+
+<button
+class="success"
+onclick="saveCustomer()">
+Save Customer
+</button>
+
+<button
+class="secondary"
+onclick="clearCustomerFields()">
+New Customer
+</button>
+
+<div id="customerList" class="saved-list"></div>
 
 </div>
 
@@ -295,7 +365,7 @@ placeholder="03XXXXXXXXX">
 id="documentNumber"
 readonly>
 
-<div class="number-info">
+<div class="small-text">
 Number is generated automatically.
 </div>
 
@@ -308,11 +378,56 @@ id="documentDate">
 </div>
 
 
+<!-- PRODUCT MEMORY -->
+
+<div class="card">
+
+<h2>Products & Services</h2>
+
+<label>Saved Product / Service</label>
+
+<select
+id="productSelect"
+onchange="selectProduct()">
+
+<option value="">
+-- Select Product --
+</option>
+
+</select>
+
+
+<label>Product / Service Name</label>
+
+<input
+id="newProductName"
+placeholder="Example: Website Design">
+
+<label>Default Price</label>
+
+<input
+type="number"
+id="newProductPrice"
+placeholder="5000"
+min="0">
+
+
+<button
+class="success"
+onclick="saveProduct()">
+Save Product
+</button>
+
+<div id="productList" class="saved-list"></div>
+
+</div>
+
+
 <!-- ITEMS -->
 
 <div class="card">
 
-<h2>Products / Services</h2>
+<h2>Invoice / Quotation Items</h2>
 
 <div id="items"></div>
 
@@ -338,30 +453,39 @@ type="number"
 id="discount"
 value="0"
 min="0"
-oninput="calculateTotal()">
+oninput="calculateTotal">
 
 
 <div class="total-box">
 
 <div class="total-row">
+
 <span>Subtotal</span>
+
 <strong>
 Rs <span id="subtotal">0.00</span>
 </strong>
+
 </div>
 
 <div class="total-row">
+
 <span>Discount</span>
+
 <strong>
 Rs <span id="discountAmount">0.00</span>
 </strong>
+
 </div>
 
 <div class="total-row grand-total">
+
 <span>Total</span>
+
 <strong>
 Rs <span id="total">0.00</span>
 </strong>
+
 </div>
 
 </div>
@@ -431,10 +555,12 @@ Business Name
 <thead>
 
 <tr>
+
 <th>Description</th>
 <th>Qty</th>
 <th>Price</th>
 <th>Total</th>
+
 </tr>
 
 </thead>
@@ -447,24 +573,33 @@ Business Name
 <div class="output-total">
 
 <div class="total-row">
+
 <span>Subtotal</span>
+
 <strong>
 Rs <span id="outSubtotal">0.00</span>
 </strong>
+
 </div>
 
 <div class="total-row">
+
 <span>Discount</span>
+
 <strong>
 Rs <span id="outDiscount">0.00</span>
 </strong>
+
 </div>
 
 <div class="total-row grand-total">
+
 <span>Total</span>
+
 <strong>
 Rs <span id="outTotal">0.00</span>
 </strong>
+
 </div>
 
 </div>
@@ -523,30 +658,26 @@ function setType(type){
 
   }
 
-
   updateDocumentNumber();
 
 }
 
 
 /* =========================
-   AUTOMATIC NUMBER
+   DOCUMENT NUMBER
 ========================= */
 
 function getNextNumber(type){
 
-  let storageKey =
+  const key =
     type === "Invoice"
-      ? "invoiceNumber"
-      : "quotationNumber";
+    ? "invoiceNumber"
+    : "quotationNumber";
 
+  const current =
+    parseInt(localStorage.getItem(key)) || 0;
 
-  let current =
-    parseInt(localStorage.getItem(storageKey)) || 0;
-
-
-  let next = current + 1;
-
+  const next = current + 1;
 
   return type === "Invoice"
     ? "INV-" + String(next).padStart(3,"0")
@@ -563,22 +694,575 @@ function updateDocumentNumber(){
 
 
 /* =========================
+   BUSINESS PROFILE
+========================= */
+
+function saveBusinessProfile(){
+
+  const profile = {
+
+    name:
+      document.getElementById("businessName").value,
+
+    phone:
+      document.getElementById("businessPhone").value,
+
+    address:
+      document.getElementById("businessAddress").value
+
+  };
+
+
+  localStorage.setItem(
+    "invoiceBusinessProfile",
+    JSON.stringify(profile)
+  );
+
+
+  alert("Business profile saved!");
+
+}
+
+
+function loadBusinessProfile(){
+
+  const saved =
+    localStorage.getItem("invoiceBusinessProfile");
+
+  if(!saved){
+    return;
+  }
+
+  try{
+
+    const profile =
+      JSON.parse(saved);
+
+    document.getElementById("businessName").value =
+      profile.name || "";
+
+    document.getElementById("businessPhone").value =
+      profile.phone || "";
+
+    document.getElementById("businessAddress").value =
+      profile.address || "";
+
+  }catch(error){
+
+    console.log(error);
+
+  }
+
+}
+
+
+function clearBusinessProfile(){
+
+  localStorage.removeItem(
+    "invoiceBusinessProfile"
+  );
+
+  document.getElementById("businessName").value = "";
+
+  document.getElementById("businessPhone").value = "";
+
+  document.getElementById("businessAddress").value = "";
+
+  alert("Business profile cleared!");
+
+}
+
+
+/* =========================
+   CUSTOMERS
+========================= */
+
+function getCustomers(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem("savedCustomers")
+    ) || [];
+
+  }catch(error){
+
+    return [];
+
+  }
+
+}
+
+
+function saveCustomer(){
+
+  const name =
+    document.getElementById("customerName").value.trim();
+
+  const phone =
+    document.getElementById("customerPhone").value.trim();
+
+
+  if(!name){
+
+    alert("Please enter customer name.");
+
+    return;
+
+  }
+
+
+  let customers = getCustomers();
+
+
+  const existing =
+    customers.find(
+      customer =>
+        customer.name.toLowerCase() === name.toLowerCase()
+    );
+
+
+  if(existing){
+
+    existing.phone = phone;
+
+  }else{
+
+    customers.push({
+      name:name,
+      phone:phone
+    });
+
+  }
+
+
+  localStorage.setItem(
+    "savedCustomers",
+    JSON.stringify(customers)
+  );
+
+
+  loadCustomers();
+
+  alert("Customer saved!");
+
+}
+
+
+function loadCustomers(){
+
+  const customers =
+    getCustomers();
+
+  const select =
+    document.getElementById("customerSelect");
+
+
+  select.innerHTML =
+    `<option value="">-- New Customer --</option>`;
+
+
+  customers.forEach((customer,index)=>{
+
+    const option =
+      document.createElement("option");
+
+    option.value = index;
+
+    option.textContent =
+      customer.name +
+      (customer.phone
+        ? " - " + customer.phone
+        : "");
+
+    select.appendChild(option);
+
+  });
+
+
+  showCustomerList();
+
+}
+
+
+function selectCustomer(){
+
+  const value =
+    document.getElementById("customerSelect").value;
+
+
+  if(value === ""){
+
+    clearCustomerFields();
+
+    return;
+
+  }
+
+
+  const customers =
+    getCustomers();
+
+  const customer =
+    customers[parseInt(value)];
+
+
+  if(!customer){
+    return;
+  }
+
+
+  document.getElementById("customerName").value =
+    customer.name;
+
+  document.getElementById("customerPhone").value =
+    customer.phone || "";
+
+}
+
+
+function clearCustomerFields(){
+
+  document.getElementById("customerName").value = "";
+
+  document.getElementById("customerPhone").value = "";
+
+  document.getElementById("customerSelect").value = "";
+
+}
+
+
+function deleteCustomer(index){
+
+  let customers =
+    getCustomers();
+
+  customers.splice(index,1);
+
+  localStorage.setItem(
+    "savedCustomers",
+    JSON.stringify(customers)
+  );
+
+  loadCustomers();
+
+}
+
+
+function showCustomerList(){
+
+  const customers =
+    getCustomers();
+
+  const list =
+    document.getElementById("customerList");
+
+
+  if(customers.length === 0){
+
+    list.innerHTML = "";
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    "<strong>Saved Customers:</strong>";
+
+
+  customers.forEach((customer,index)=>{
+
+    const div =
+      document.createElement("div");
+
+    div.className = "saved-card";
+
+
+    const text =
+      document.createElement("span");
+
+    text.textContent =
+      customer.name +
+      (customer.phone
+        ? " - " + customer.phone
+        : "");
+
+
+    const button =
+      document.createElement("button");
+
+    button.className = "danger";
+
+    button.textContent = "Delete";
+
+    button.onclick = function(){
+
+      deleteCustomer(index);
+
+    };
+
+
+    div.appendChild(text);
+
+    div.appendChild(button);
+
+    list.appendChild(div);
+
+  });
+
+}
+
+
+/* =========================
+   PRODUCTS
+========================= */
+
+function getProducts(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem("savedProducts")
+    ) || [];
+
+  }catch(error){
+
+    return [];
+
+  }
+
+}
+
+
+function saveProduct(){
+
+  const name =
+    document.getElementById("newProductName")
+    .value.trim();
+
+  const price =
+    parseFloat(
+      document.getElementById("newProductPrice").value
+    ) || 0;
+
+
+  if(!name){
+
+    alert("Please enter product/service name.");
+
+    return;
+
+  }
+
+
+  let products =
+    getProducts();
+
+
+  const existing =
+    products.find(
+      product =>
+        product.name.toLowerCase() === name.toLowerCase()
+    );
+
+
+  if(existing){
+
+    existing.price = price;
+
+  }else{
+
+    products.push({
+      name:name,
+      price:price
+    });
+
+  }
+
+
+  localStorage.setItem(
+    "savedProducts",
+    JSON.stringify(products)
+  );
+
+
+  loadProducts();
+
+  document.getElementById("newProductName").value = "";
+
+  document.getElementById("newProductPrice").value = "";
+
+  alert("Product saved!");
+
+}
+
+
+function loadProducts(){
+
+  const products =
+    getProducts();
+
+  const select =
+    document.getElementById("productSelect");
+
+
+  select.innerHTML =
+    `<option value="">-- Select Product --</option>`;
+
+
+  products.forEach((product,index)=>{
+
+    const option =
+      document.createElement("option");
+
+    option.value = index;
+
+    option.textContent =
+      product.name +
+      " - Rs " +
+      product.price;
+
+    select.appendChild(option);
+
+  });
+
+
+  showProductList();
+
+}
+
+
+function selectProduct(){
+
+  const value =
+    document.getElementById("productSelect").value;
+
+
+  if(value === ""){
+    return;
+  }
+
+
+  const products =
+    getProducts();
+
+  const product =
+    products[parseInt(value)];
+
+
+  if(!product){
+    return;
+  }
+
+
+  addItem(product.name,product.price);
+
+}
+
+
+function deleteProduct(index){
+
+  let products =
+    getProducts();
+
+  products.splice(index,1);
+
+  localStorage.setItem(
+    "savedProducts",
+    JSON.stringify(products)
+  );
+
+  loadProducts();
+
+}
+
+
+function showProductList(){
+
+  const products =
+    getProducts();
+
+  const list =
+    document.getElementById("productList");
+
+
+  if(products.length === 0){
+
+    list.innerHTML = "";
+
+    return;
+
+  }
+
+
+  list.innerHTML =
+    "<strong>Saved Products:</strong>";
+
+
+  products.forEach((product,index)=>{
+
+    const div =
+      document.createElement("div");
+
+    div.className = "saved-card";
+
+
+    const text =
+      document.createElement("span");
+
+    text.textContent =
+      product.name +
+      " - Rs " +
+      product.price;
+
+
+    const button =
+      document.createElement("button");
+
+    button.className = "danger";
+
+    button.textContent = "Delete";
+
+    button.onclick = function(){
+
+      deleteProduct(index);
+
+    };
+
+
+    div.appendChild(text);
+
+    div.appendChild(button);
+
+    list.appendChild(div);
+
+  });
+
+}
+
+
+/* =========================
    ADD ITEM
 ========================= */
 
-function addItem(){
+function addItem(productName="",productPrice=0){
 
   itemCounter++;
+
 
   const items =
     document.getElementById("items");
 
+
   const div =
     document.createElement("div");
 
+
   div.className = "item";
 
-  div.id = "item-" + itemCounter;
+  div.id =
+    "item-" + itemCounter;
 
 
   div.innerHTML = `
@@ -593,6 +1277,7 @@ function addItem(){
 
         <input
           class="item-name"
+          value="${escapeHTML(productName)}"
           placeholder="Product name"
           oninput="calculateTotal()">
 
@@ -620,7 +1305,7 @@ function addItem(){
         <input
           type="number"
           class="item-price"
-          value="0"
+          value="${productPrice}"
           min="0"
           oninput="calculateTotal()">
 
@@ -666,7 +1351,7 @@ function removeItem(id){
 
 
 /* =========================
-   CALCULATE
+   CALCULATE TOTAL
 ========================= */
 
 function calculateTotal(){
@@ -676,7 +1361,7 @@ function calculateTotal(){
 
   document
     .querySelectorAll(".item")
-    .forEach(item => {
+    .forEach(item=>{
 
       const qty =
         parseFloat(
@@ -702,7 +1387,7 @@ function calculateTotal(){
 
 
   const total =
-    Math.max(subtotal - discount, 0);
+    Math.max(subtotal - discount,0);
 
 
   document.getElementById("subtotal")
@@ -735,19 +1420,16 @@ function generateDocument(){
     document.getElementById("documentNumber").value;
 
 
-  /*
-    Number ko permanently save kar do
-    sirf jab document generate ho
-  */
-
-  let storageKey =
+  const storageKey =
     currentType === "Invoice"
       ? "invoiceNumber"
       : "quotationNumber";
 
 
   let savedNumber =
-    parseInt(localStorage.getItem(storageKey)) || 0;
+    parseInt(
+      localStorage.getItem(storageKey)
+    ) || 0;
 
 
   let currentNumber =
@@ -822,7 +1504,7 @@ function generateDocument(){
 
   document
     .querySelectorAll(".item")
-    .forEach(item => {
+    .forEach(item=>{
 
       const name =
         item.querySelector(".item-name").value
@@ -831,245 +1513,4 @@ function generateDocument(){
 
       const qty =
         parseFloat(
-          item.querySelector(".item-qty").value
-        ) || 0;
-
-
-      const price =
-        parseFloat(
-          item.querySelector(".item-price").value
-        ) || 0;
-
-
-      const lineTotal =
-        qty * price;
-
-
-      subtotal += lineTotal;
-
-
-      const row =
-        document.createElement("tr");
-
-
-      row.innerHTML = `
-
-        <td>${escapeHTML(name)}</td>
-
-        <td>${qty}</td>
-
-        <td>Rs ${price.toFixed(2)}</td>
-
-        <td>Rs ${lineTotal.toFixed(2)}</td>
-
-      `;
-
-
-      outItems.appendChild(row);
-
-    });
-
-
-  const discount =
-    parseFloat(
-      document.getElementById("discount").value
-    ) || 0;
-
-
-  const total =
-    Math.max(subtotal - discount, 0);
-
-
-  document.getElementById("outSubtotal")
-    .textContent =
-    subtotal.toFixed(2);
-
-
-  document.getElementById("outDiscount")
-    .textContent =
-    discount.toFixed(2);
-
-
-  document.getElementById("outTotal")
-    .textContent =
-    total.toFixed(2);
-
-
-  document.getElementById("output")
-    .style.display =
-    "block";
-
-
-  /*
-    Next number ready
-  */
-
-  updateDocumentNumber();
-
-
-  document.getElementById("output")
-    .scrollIntoView({
-      behavior:"smooth"
-    });
-
-}
-
-
-/* =========================
-   HTML SECURITY
-========================= */
-
-function escapeHTML(text){
-
-  const div =
-    document.createElement("div");
-
-  div.textContent = text;
-
-  return div.innerHTML;
-
-}
-
-
-/* =========================
-   BUSINESS PROFILE SAVE
-========================= */
-
-function saveBusinessProfile(){
-
-  const profile = {
-
-    name:
-      document.getElementById("businessName").value,
-
-    phone:
-      document.getElementById("businessPhone").value,
-
-    address:
-      document.getElementById("businessAddress").value
-
-  };
-
-
-  localStorage.setItem(
-    "invoiceBusinessProfile",
-    JSON.stringify(profile)
-  );
-
-
-  alert(
-    "Business profile saved successfully!"
-  );
-
-}
-
-
-/* =========================
-   LOAD BUSINESS PROFILE
-========================= */
-
-function loadBusinessProfile(){
-
-  const saved =
-    localStorage.getItem(
-      "invoiceBusinessProfile"
-    );
-
-
-  if(!saved){
-    return;
-  }
-
-
-  try{
-
-    const profile =
-      JSON.parse(saved);
-
-
-    document.getElementById("businessName")
-      .value =
-      profile.name || "";
-
-
-    document.getElementById("businessPhone")
-      .value =
-      profile.phone || "";
-
-
-    document.getElementById("businessAddress")
-      .value =
-      profile.address || "";
-
-
-  }catch(error){
-
-    console.log(
-      "Saved profile could not be loaded."
-    );
-
-  }
-
-}
-
-
-/* =========================
-   CLEAR PROFILE
-========================= */
-
-function clearBusinessProfile(){
-
-  localStorage.removeItem(
-    "invoiceBusinessProfile"
-  );
-
-
-  document.getElementById("businessName")
-    .value = "";
-
-
-  document.getElementById("businessPhone")
-    .value = "";
-
-
-  document.getElementById("businessAddress")
-    .value = "";
-
-
-  alert(
-    "Saved business profile cleared."
-  );
-
-}
-
-
-/* =========================
-   START
-========================= */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  function(){
-
-    loadBusinessProfile();
-
-
-    document.getElementById("documentDate")
-      .value =
-      new Date()
-      .toISOString()
-      .split("T")[0];
-
-
-    addItem();
-
-
-    updateDocumentNumber();
-
-  }
-);
-
-</script>
-
-</body>
-  </html>
+          item.querySele
