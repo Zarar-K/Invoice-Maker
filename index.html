@@ -2,156 +2,227 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Invoice & Quotation Maker</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f3f4f6;
-color:#111827
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f3f4f6;
+  color:#111827;
 }
 
 .container{
-max-width:900px;
-margin:auto;
-padding:20px
+  max-width:900px;
+  margin:auto;
+  padding:20px;
 }
 
-h1{text-align:center}
+h1{
+  text-align:center;
+  margin-bottom:20px;
+}
 
 .card{
-background:white;
-padding:20px;
-border-radius:12px;
-margin-bottom:18px;
-box-shadow:0 2px 10px rgba(0,0,0,.08)
+  background:white;
+  padding:18px;
+  border-radius:12px;
+  margin-bottom:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+h2{
+  margin-top:0;
+  font-size:20px;
+}
+
+label{
+  display:block;
+  font-weight:bold;
+  margin-top:12px;
+  margin-bottom:5px;
 }
 
 input{
-width:100%;
-padding:12px;
-margin:6px 0 12px;
-border:1px solid #d1d5db;
-border-radius:8px;
-font-size:15px
+  width:100%;
+  padding:11px;
+  border:1px solid #d1d5db;
+  border-radius:7px;
+  font-size:15px;
 }
 
 button{
-border:0;
-padding:12px 18px;
-border-radius:8px;
-color:white;
-background:#111827;
-font-size:15px;
-margin:4px;
-cursor:pointer
+  border:0;
+  padding:11px 16px;
+  border-radius:7px;
+  cursor:pointer;
+  font-weight:bold;
+  margin-top:10px;
 }
 
-button:hover{opacity:.9}
-
 .tabs{
-display:flex;
-gap:8px;
-margin-bottom:18px
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
 }
 
 .tab{
-flex:1;
-background:#2563eb
+  flex:1;
+  background:#e5e7eb;
 }
 
 .tab.active{
-background:#16a34a
+  background:#111827;
+  color:white;
 }
 
-.add{background:#2563eb}
-.remove{background:#dc2626}
+.primary{
+  background:#2563eb;
+  color:white;
+}
 
-.generate{
-background:#16a34a;
-width:100%;
-font-size:17px
+.success{
+  background:#16a34a;
+  color:white;
+}
+
+.danger{
+  background:#dc2626;
+  color:white;
+}
+
+.secondary{
+  background:#6b7280;
+  color:white;
 }
 
 .item{
-border:1px solid #e5e7eb;
-padding:12px;
-border-radius:8px;
-margin-bottom:10px
+  border:1px solid #e5e7eb;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:10px;
 }
 
-.document{
-display:none;
-background:white;
-padding:30px;
-margin-top:20px
+.item-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr auto;
+  gap:8px;
+  align-items:end;
 }
 
-.header{
-display:flex;
-justify-content:space-between;
-gap:20px;
-border-bottom:2px solid #111827;
-padding-bottom:15px
+.remove{
+  background:#dc2626;
+  color:white;
+  margin:0;
 }
 
-.title{
-font-size:30px;
-font-weight:bold
+.total-box{
+  background:#f9fafb;
+  padding:15px;
+  border-radius:8px;
+  margin-top:15px;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:25px
+.total-row{
+  display:flex;
+  justify-content:space-between;
+  margin:7px 0;
 }
 
-th,td{
-padding:10px;
-border-bottom:1px solid #ddd;
-text-align:left
+.grand-total{
+  font-size:20px;
+  font-weight:bold;
+  border-top:1px solid #ddd;
+  padding-top:10px;
 }
 
-.summary{
-text-align:right;
-margin-top:20px
+.output{
+  display:none;
+  background:white;
+  padding:30px;
+  margin-top:20px;
 }
 
-.grand{
-font-size:24px;
-font-weight:bold
+.output-header{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  border-bottom:2px solid #111827;
+  padding-bottom:15px;
+}
+
+.output table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:25px;
+}
+
+.output th,
+.output td{
+  border:1px solid #ddd;
+  padding:10px;
+  text-align:left;
+}
+
+.output th{
+  background:#f3f4f6;
+}
+
+.output-total{
+  margin-top:20px;
+  margin-left:auto;
+  max-width:300px;
+}
+
+.actions{
+  text-align:center;
+  margin-top:20px;
 }
 
 @media(max-width:600px){
-.header{flex-direction:column}
-.document{padding:18px}
-table{font-size:13px}
+
+  .container{
+    padding:10px;
+  }
+
+  .item-grid{
+    grid-template-columns:1fr;
+  }
+
+  .output-header{
+    flex-direction:column;
+  }
+
+  .output{
+    padding:15px;
+  }
 }
 
 @media print{
-body{background:white}
 
-.container>*:not(.document){
-display:none
-}
+  body{
+    background:white;
+  }
 
-.document{
-display:block!important;
-box-shadow:none;
-margin:0
-}
+  .container > *:not(.output){
+    display:none !important;
+  }
 
-.print-hide{
-display:none!important
-}
+  .output{
+    display:block !important;
+    box-shadow:none;
+    margin:0;
+  }
 
-@page{
-margin:15mm
-}
+  .actions{
+    display:none;
+  }
 }
 </style>
 </head>
@@ -160,58 +231,75 @@ margin:15mm
 
 <div class="container">
 
-<h1>🧾 Business Document Maker</h1>
+<h1>Invoice & Quotation Maker</h1>
+
+<div class="card">
 
 <div class="tabs">
-<button id="invoiceTab" class="tab active"
+
+<button id="invoiceTab"
+class="tab active"
 onclick="setType('Invoice')">
 Invoice
 </button>
 
-<button id="quotationTab" class="tab"
+<button id="quotationTab"
+class="tab"
 onclick="setType('Quotation')">
 Quotation
 </button>
-</div>
 
-<div class="card">
+</div>
 
 <h2>Business Information</h2>
 
-<input id="businessName"
-placeholder="Business Name">
+<label>Business Name</label>
+<input id="businessName" placeholder="Your Business Name">
 
-<input id="businessPhone"
-placeholder="Phone Number">
+<label>Phone</label>
+<input id="businessPhone" placeholder="03XXXXXXXXX">
 
-<input id="businessAddress"
-placeholder="Business Address">
+<label>Address</label>
+<input id="businessAddress" placeholder="Business Address">
+
+<div>
+<button class="success" onclick="saveBusinessProfile()">
+Save Business Profile
+</button>
+
+<button class="secondary" onclick="clearBusinessProfile()">
+Clear Saved Profile
+</button>
+</div>
 
 </div>
+
 
 <div class="card">
 
 <h2>Customer Information</h2>
 
-<input id="customerName"
-placeholder="Customer Name">
+<label>Customer Name</label>
+<input id="customerName" placeholder="Customer Name">
 
-<input id="customerPhone"
-placeholder="Customer Phone">
+<label>Customer Phone</label>
+<input id="customerPhone" placeholder="03XXXXXXXXX">
 
 </div>
+
 
 <div class="card">
 
 <h2>Document Information</h2>
 
-<input id="documentNumber"
-placeholder="Document Number">
+<label>Document Number</label>
+<input id="documentNumber" placeholder="INV-001">
 
-<input id="documentDate"
-type="date">
+<label>Date</label>
+<input type="date" id="documentDate">
 
 </div>
+
 
 <div class="card">
 
@@ -219,107 +307,137 @@ type="date">
 
 <div id="items"></div>
 
-<button class="add"
-onclick="addItem()">
-+ Add Product
+<button class="primary" onclick="addItem()">
++ Add Product / Service
 </button>
 
 </div>
+
 
 <div class="card">
 
 <h2>Discount</h2>
 
-<input id="discount"
+<label>Discount</label>
+<input
 type="number"
+id="discount"
 value="0"
-placeholder="Discount">
+min="0"
+oninput="calculateTotal()"
+>
 
-<button class="generate"
-onclick="generateDocument()">
+<div class="total-box">
+
+<div class="total-row">
+<span>Subtotal</span>
+<strong>Rs <span id="subtotal">0.00</span></strong>
+</div>
+
+<div class="total-row">
+<span>Discount</span>
+<strong>Rs <span id="discountAmount">0.00</span></strong>
+</div>
+
+<div class="total-row grand-total">
+<span>Total</span>
+<strong>Rs <span id="total">0.00</span></strong>
+</div>
+
+</div>
+
+<button class="primary" onclick="generateDocument()">
 Generate Document
 </button>
 
 </div>
 
-<div id="document"
-class="document">
 
-<div class="header">
+<div id="output" class="output">
+
+<div class="output-header">
 
 <div>
-<div id="outputTitle" class="title">
-INVOICE
-</div>
 
-<h2 id="outBusiness"></h2>
+<h1 id="outputTitle">INVOICE</h1>
+
+<h2 id="outBusiness">Business Name</h2>
 
 <div id="outPhone"></div>
 
 <div id="outAddress"></div>
+
 </div>
 
 <div>
-<strong>Number:</strong>
+
+<div>
+<strong>Customer:</strong>
+<span id="outCustomer"></span>
+</div>
+
+<div>
+<strong>Phone:</strong>
+<span id="outCustomerPhone"></span>
+</div>
+
+<div>
+<strong>No:</strong>
 <span id="outNumber"></span>
+</div>
 
-<br>
-
+<div>
 <strong>Date:</strong>
 <span id="outDate"></span>
 </div>
 
 </div>
 
-<div style="margin-top:25px">
-
-<strong>Bill / Prepared For:</strong>
-
-<div id="outCustomer"></div>
-
-<div id="outCustomerPhone"></div>
-
 </div>
+
 
 <table>
 
 <thead>
+
 <tr>
-<th>Item</th>
+<th>Description</th>
 <th>Qty</th>
 <th>Price</th>
 <th>Total</th>
 </tr>
+
 </thead>
 
 <tbody id="outItems"></tbody>
 
 </table>
 
-<div class="summary">
 
-<div>
-Subtotal:
-<strong>Rs <span id="outSubtotal">0</span></strong>
+<div class="output-total">
+
+<div class="total-row">
+<span>Subtotal</span>
+<strong>Rs <span id="outSubtotal">0.00</span></strong>
 </div>
 
-<div>
-Discount:
-<strong>Rs <span id="outDiscount">0</span></strong>
+<div class="total-row">
+<span>Discount</span>
+<strong>Rs <span id="outDiscount">0.00</span></strong>
 </div>
 
-<div class="grand">
-Total:
-Rs <span id="outTotal">0</span>
+<div class="total-row grand-total">
+<span>Total</span>
+<strong>Rs <span id="outTotal">0.00</span></strong>
 </div>
 
 </div>
 
-<div class="print-hide"
-style="text-align:center;margin-top:35px">
 
-<button onclick="window.print()">
-🖨️ Print / Save PDF
+<div class="actions">
+
+<button class="success" onclick="window.print()">
+Print / Save PDF
 </button>
 
 </div>
@@ -327,210 +445,405 @@ style="text-align:center;margin-top:35px">
 </div>
 
 </div>
+
 
 <script>
 
-let itemCount=0;
-let documentType="Invoice";
+let currentType = "Invoice";
+let itemCounter = 0;
+
+
+/* -------------------------
+   DOCUMENT TYPE
+------------------------- */
 
 function setType(type){
 
-documentType=type;
+  currentType = type;
 
-document.getElementById("outputTitle")
-.textContent=type.toUpperCase();
+  const invoiceTab = document.getElementById("invoiceTab");
+  const quotationTab = document.getElementById("quotationTab");
 
-document.getElementById("invoiceTab")
-.classList.toggle("active",type==="Invoice");
+  invoiceTab.classList.remove("active");
+  quotationTab.classList.remove("active");
 
-document.getElementById("quotationTab")
-.classList.toggle("active",type==="Quotation");
+  if(type === "Invoice"){
+    invoiceTab.classList.add("active");
+  }else{
+    quotationTab.classList.add("active");
+  }
 
 }
+
+
+/* -------------------------
+   ADD ITEM
+------------------------- */
 
 function addItem(){
 
-itemCount++;
+  itemCounter++;
 
-const div=document.createElement("div");
+  const items = document.getElementById("items");
 
-div.className="item";
+  const div = document.createElement("div");
 
-div.id="item"+itemCount;
+  div.className = "item";
 
-div.innerHTML=`
+  div.id = "item-" + itemCounter;
 
-<input class="itemName"
-placeholder="Product / Service">
+  div.innerHTML = `
 
-<input class="itemQty"
-type="number"
-value="1"
-min="1"
-placeholder="Quantity">
+    <div class="item-grid">
 
-<input class="itemPrice"
-type="number"
-value="0"
-min="0"
-placeholder="Price">
+      <div>
+        <label>Product / Service</label>
+        <input
+          class="item-name"
+          placeholder="Product name"
+          oninput="calculateTotal()"
+        >
+      </div>
 
-<button class="remove"
-onclick="removeItem(${itemCount})">
-Remove
-</button>
+      <div>
+        <label>Qty</label>
+        <input
+          type="number"
+          class="item-qty"
+          value="1"
+          min="1"
+          oninput="calculateTotal()"
+        >
+      </div>
 
-`;
+      <div>
+        <label>Price</label>
+        <input
+          type="number"
+          class="item-price"
+          value="0"
+          min="0"
+          oninput="calculateTotal()"
+        >
+      </div>
 
-document
-.getElementById("items")
-.appendChild(div);
+      <button
+        class="remove"
+        onclick="removeItem(${itemCounter})">
+        Remove
+      </button>
 
+    </div>
+
+  `;
+
+  items.appendChild(div);
+
+  calculateTotal();
 }
+
+
+/* -------------------------
+   REMOVE ITEM
+------------------------- */
 
 function removeItem(id){
 
-const item=document.getElementById("item"+id);
+  const item = document.getElementById("item-" + id);
 
-if(item)item.remove();
+  if(item){
+    item.remove();
+  }
+
+  calculateTotal();
+}
+
+
+/* -------------------------
+   CALCULATE TOTAL
+------------------------- */
+
+function calculateTotal(){
+
+  let subtotal = 0;
+
+  const items = document.querySelectorAll(".item");
+
+  items.forEach(item => {
+
+    const qty =
+      parseFloat(item.querySelector(".item-qty").value) || 0;
+
+    const price =
+      parseFloat(item.querySelector(".item-price").value) || 0;
+
+    subtotal += qty * price;
+
+  });
+
+
+  const discount =
+    parseFloat(document.getElementById("discount").value) || 0;
+
+  const total = Math.max(subtotal - discount, 0);
+
+
+  document.getElementById("subtotal").textContent =
+    subtotal.toFixed(2);
+
+  document.getElementById("discountAmount").textContent =
+    discount.toFixed(2);
+
+  document.getElementById("total").textContent =
+    total.toFixed(2);
 
 }
+
+
+/* -------------------------
+   GENERATE DOCUMENT
+------------------------- */
 
 function generateDocument(){
 
-const businessName=
-document.getElementById("businessName").value
-||"Your Business";
+  calculateTotal();
 
-const phone=
-document.getElementById("businessPhone").value;
+  const businessName =
+    document.getElementById("businessName").value;
 
-const address=
-document.getElementById("businessAddress").value;
+  const businessPhone =
+    document.getElementById("businessPhone").value;
 
-const customer=
-document.getElementById("customerName").value
-||"Customer";
+  const businessAddress =
+    document.getElementById("businessAddress").value;
 
-const customerPhone=
-document.getElementById("customerPhone").value;
+  const customerName =
+    document.getElementById("customerName").value;
 
-const number=
-document.getElementById("documentNumber").value
-||"001";
+  const customerPhone =
+    document.getElementById("customerPhone").value;
 
-const date=
-document.getElementById("documentDate").value
-||new Date().toLocaleDateString();
+  const documentNumber =
+    document.getElementById("documentNumber").value;
 
-const discount=
-Number(document.getElementById("discount").value)||0;
+  const documentDate =
+    document.getElementById("documentDate").value;
 
-document.getElementById("outputTitle")
-.textContent=documentType.toUpperCase();
+  const discount =
+    parseFloat(document.getElementById("discount").value) || 0;
 
-document.getElementById("outBusiness")
-.textContent=businessName;
 
-document.getElementById("outPhone")
-.textContent=phone;
+  document.getElementById("outputTitle").textContent =
+    currentType.toUpperCase();
 
-document.getElementById("outAddress")
-.textContent=address;
+  document.getElementById("outBusiness").textContent =
+    businessName || "Business Name";
 
-document.getElementById("outCustomer")
-.textContent=customer;
+  document.getElementById("outPhone").textContent =
+    businessPhone || "";
 
-document.getElementById("outCustomerPhone")
-.textContent=customerPhone;
+  document.getElementById("outAddress").textContent =
+    businessAddress || "";
 
-document.getElementById("outNumber")
-.textContent=number;
+  document.getElementById("outCustomer").textContent =
+    customerName || "-";
 
-document.getElementById("outDate")
-.textContent=date;
+  document.getElementById("outCustomerPhone").textContent =
+    customerPhone || "-";
 
-const items=document.querySelectorAll(".item");
+  document.getElementById("outNumber").textContent =
+    documentNumber || "-";
 
-const output=document.getElementById("outItems");
+  document.getElementById("outDate").textContent =
+    documentDate || "-";
 
-output.innerHTML="";
 
-let subtotal=0;
+  const outItems =
+    document.getElementById("outItems");
 
-items.forEach(item=>{
+  outItems.innerHTML = "";
 
-const name=
-item.querySelector(".itemName").value
-||"Item";
+  let subtotal = 0;
 
-const qty=
-Number(item.querySelector(".itemQty").value)
-||0;
 
-const price=
-Number(item.querySelector(".itemPrice").value)
-||0;
+  document.querySelectorAll(".item").forEach(item => {
 
-const total=qty*price;
+    const name =
+      item.querySelector(".item-name").value || "Item";
 
-subtotal+=total;
+    const qty =
+      parseFloat(item.querySelector(".item-qty").value) || 0;
 
-const row=document.createElement("tr");
+    const price =
+      parseFloat(item.querySelector(".item-price").value) || 0;
 
-const nameCell=document.createElement("td");
-nameCell.textContent=name;
+    const lineTotal = qty * price;
 
-const qtyCell=document.createElement("td");
-qtyCell.textContent=qty;
+    subtotal += lineTotal;
 
-const priceCell=document.createElement("td");
-priceCell.textContent=
-"Rs "+price.toLocaleString();
 
-const totalCell=document.createElement("td");
-totalCell.textContent=
-"Rs "+total.toLocaleString();
+    const row = document.createElement("tr");
 
-row.appendChild(nameCell);
-row.appendChild(qtyCell);
-row.appendChild(priceCell);
-row.appendChild(totalCell);
+    row.innerHTML = `
 
-output.appendChild(row);
+      <td>${escapeHTML(name)}</td>
 
-});
+      <td>${qty}</td>
 
-const finalTotal=
-Math.max(0,subtotal-discount);
+      <td>Rs ${price.toFixed(2)}</td>
 
-document.getElementById("outSubtotal")
-.textContent=subtotal.toLocaleString();
+      <td>Rs ${lineTotal.toFixed(2)}</td>
 
-document.getElementById("outDiscount")
-.textContent=discount.toLocaleString();
+    `;
 
-document.getElementById("outTotal")
-.textContent=finalTotal.toLocaleString();
+    outItems.appendChild(row);
 
-document.getElementById("document")
-.style.display="block";
+  });
 
-document.getElementById("document")
-.scrollIntoView({
-behavior:"smooth"
-});
+
+  const total = Math.max(subtotal - discount, 0);
+
+
+  document.getElementById("outSubtotal").textContent =
+    subtotal.toFixed(2);
+
+  document.getElementById("outDiscount").textContent =
+    discount.toFixed(2);
+
+  document.getElementById("outTotal").textContent =
+    total.toFixed(2);
+
+
+  document.getElementById("output").style.display =
+    "block";
+
+
+  document.getElementById("output").scrollIntoView({
+    behavior:"smooth"
+  });
 
 }
 
-addItem();
 
-document.getElementById("documentDate")
-.value=new Date()
-.toISOString()
-.split("T")[0];
+/* -------------------------
+   SECURITY
+------------------------- */
+
+function escapeHTML(text){
+
+  const div = document.createElement("div");
+
+  div.textContent = text;
+
+  return div.innerHTML;
+
+}
+
+
+/* -------------------------
+   SAVE BUSINESS PROFILE
+------------------------- */
+
+function saveBusinessProfile(){
+
+  const profile = {
+
+    name:
+      document.getElementById("businessName").value,
+
+    phone:
+      document.getElementById("businessPhone").value,
+
+    address:
+      document.getElementById("businessAddress").value
+
+  };
+
+
+  localStorage.setItem(
+    "invoiceBusinessProfile",
+    JSON.stringify(profile)
+  );
+
+
+  alert("Business profile saved successfully!");
+
+}
+
+
+/* -------------------------
+   LOAD BUSINESS PROFILE
+------------------------- */
+
+function loadBusinessProfile(){
+
+  const saved =
+    localStorage.getItem("invoiceBusinessProfile");
+
+  if(!saved){
+    return;
+  }
+
+
+  try{
+
+    const profile =
+      JSON.parse(saved);
+
+
+    document.getElementById("businessName").value =
+      profile.name || "";
+
+    document.getElementById("businessPhone").value =
+      profile.phone || "";
+
+    document.getElementById("businessAddress").value =
+      profile.address || "";
+
+  }catch(error){
+
+    console.log("Saved profile could not be loaded.");
+
+  }
+
+}
+
+
+/* -------------------------
+   CLEAR PROFILE
+------------------------- */
+
+function clearBusinessProfile(){
+
+  localStorage.removeItem("invoiceBusinessProfile");
+
+  document.getElementById("businessName").value = "";
+
+  document.getElementById("businessPhone").value = "";
+
+  document.getElementById("businessAddress").value = "";
+
+  alert("Saved business profile cleared.");
+
+}
+
+
+/* -------------------------
+   INITIAL SETUP
+------------------------- */
+
+document.addEventListener("DOMContentLoaded", function(){
+
+  loadBusinessProfile();
+
+  document.getElementById("documentDate").value =
+    new Date().toISOString().split("T")[0];
+
+  addItem();
+
+});
 
 </script>
 
 </body>
-</html>
+  </html>
