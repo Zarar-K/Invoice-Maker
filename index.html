@@ -7,9 +7,7 @@
 <title>Invoice & Quotation Maker</title>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
   margin:0;
@@ -24,10 +22,7 @@ body{
   padding:20px;
 }
 
-h1{
-  text-align:center;
-  margin-bottom:20px;
-}
+h1{text-align:center;margin-bottom:20px}
 
 .card{
   background:white;
@@ -37,10 +32,7 @@ h1{
   box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
 
-h2{
-  margin-top:0;
-  font-size:20px;
-}
+h2{margin-top:0;font-size:20px}
 
 label{
   display:block;
@@ -82,25 +74,10 @@ button{
   color:white;
 }
 
-.primary{
-  background:#2563eb;
-  color:white;
-}
-
-.success{
-  background:#16a34a;
-  color:white;
-}
-
-.danger{
-  background:#dc2626;
-  color:white;
-}
-
-.secondary{
-  background:#6b7280;
-  color:white;
-}
+.primary{background:#2563eb;color:white}
+.success{background:#16a34a;color:white}
+.danger{background:#dc2626;color:white}
+.secondary{background:#6b7280;color:white}
 
 .item{
   border:1px solid #e5e7eb;
@@ -170,9 +147,7 @@ button{
   text-align:left;
 }
 
-.output th{
-  background:#f3f4f6;
-}
+.output th{background:#f3f4f6}
 
 .output-total{
   margin-top:20px;
@@ -185,30 +160,26 @@ button{
   margin-top:20px;
 }
 
+.number-info{
+  font-size:13px;
+  color:#6b7280;
+  margin-top:6px;
+}
+
 @media(max-width:600px){
 
-  .container{
-    padding:10px;
-  }
+  .container{padding:10px}
 
-  .item-grid{
-    grid-template-columns:1fr;
-  }
+  .item-grid{grid-template-columns:1fr}
 
-  .output-header{
-    flex-direction:column;
-  }
+  .output-header{flex-direction:column}
 
-  .output{
-    padding:15px;
-  }
+  .output{padding:15px}
 }
 
 @media print{
 
-  body{
-    background:white;
-  }
+  body{background:white}
 
   .container > *:not(.output){
     display:none !important;
@@ -220,9 +191,7 @@ button{
     margin:0;
   }
 
-  .actions{
-    display:none;
-  }
+  .actions{display:none}
 }
 </style>
 </head>
@@ -233,17 +202,22 @@ button{
 
 <h1>Invoice & Quotation Maker</h1>
 
+
+<!-- DOCUMENT TYPE -->
+
 <div class="card">
 
 <div class="tabs">
 
-<button id="invoiceTab"
+<button
+id="invoiceTab"
 class="tab active"
 onclick="setType('Invoice')">
 Invoice
 </button>
 
-<button id="quotationTab"
+<button
+id="quotationTab"
 class="tab"
 onclick="setType('Quotation')">
 Quotation
@@ -251,55 +225,90 @@ Quotation
 
 </div>
 
+</div>
+
+
+<!-- BUSINESS PROFILE -->
+
+<div class="card">
+
 <h2>Business Information</h2>
 
 <label>Business Name</label>
-<input id="businessName" placeholder="Your Business Name">
+<input
+id="businessName"
+placeholder="Your Business Name">
 
 <label>Phone</label>
-<input id="businessPhone" placeholder="03XXXXXXXXX">
+<input
+id="businessPhone"
+placeholder="03XXXXXXXXX">
 
 <label>Address</label>
-<input id="businessAddress" placeholder="Business Address">
+<input
+id="businessAddress"
+placeholder="Business Address">
 
-<div>
-<button class="success" onclick="saveBusinessProfile()">
+<button
+class="success"
+onclick="saveBusinessProfile()">
 Save Business Profile
 </button>
 
-<button class="secondary" onclick="clearBusinessProfile()">
+<button
+class="secondary"
+onclick="clearBusinessProfile()">
 Clear Saved Profile
 </button>
-</div>
 
 </div>
 
+
+<!-- CUSTOMER -->
 
 <div class="card">
 
 <h2>Customer Information</h2>
 
 <label>Customer Name</label>
-<input id="customerName" placeholder="Customer Name">
+<input
+id="customerName"
+placeholder="Customer Name">
 
 <label>Customer Phone</label>
-<input id="customerPhone" placeholder="03XXXXXXXXX">
+<input
+id="customerPhone"
+placeholder="03XXXXXXXXX">
 
 </div>
 
+
+<!-- DOCUMENT -->
 
 <div class="card">
 
 <h2>Document Information</h2>
 
 <label>Document Number</label>
-<input id="documentNumber" placeholder="INV-001">
+
+<input
+id="documentNumber"
+readonly>
+
+<div class="number-info">
+Number is generated automatically.
+</div>
 
 <label>Date</label>
-<input type="date" id="documentDate">
+
+<input
+type="date"
+id="documentDate">
 
 </div>
 
+
+<!-- ITEMS -->
 
 <div class="card">
 
@@ -307,51 +316,67 @@ Clear Saved Profile
 
 <div id="items"></div>
 
-<button class="primary" onclick="addItem()">
+<button
+class="primary"
+onclick="addItem()">
 + Add Product / Service
 </button>
 
 </div>
 
 
+<!-- DISCOUNT -->
+
 <div class="card">
 
 <h2>Discount</h2>
 
 <label>Discount</label>
+
 <input
 type="number"
 id="discount"
 value="0"
 min="0"
-oninput="calculateTotal()"
->
+oninput="calculateTotal()">
+
 
 <div class="total-box">
 
 <div class="total-row">
 <span>Subtotal</span>
-<strong>Rs <span id="subtotal">0.00</span></strong>
+<strong>
+Rs <span id="subtotal">0.00</span>
+</strong>
 </div>
 
 <div class="total-row">
 <span>Discount</span>
-<strong>Rs <span id="discountAmount">0.00</span></strong>
+<strong>
+Rs <span id="discountAmount">0.00</span>
+</strong>
 </div>
 
 <div class="total-row grand-total">
 <span>Total</span>
-<strong>Rs <span id="total">0.00</span></strong>
+<strong>
+Rs <span id="total">0.00</span>
+</strong>
 </div>
 
 </div>
 
-<button class="primary" onclick="generateDocument()">
+
+<button
+class="primary"
+onclick="generateDocument()">
 Generate Document
 </button>
 
 </div>
 
+
+<!-- OUTPUT -->
 
 <div id="output" class="output">
 
@@ -359,15 +384,20 @@ Generate Document
 
 <div>
 
-<h1 id="outputTitle">INVOICE</h1>
+<h1 id="outputTitle">
+INVOICE
+</h1>
 
-<h2 id="outBusiness">Business Name</h2>
+<h2 id="outBusiness">
+Business Name
+</h2>
 
 <div id="outPhone"></div>
 
 <div id="outAddress"></div>
 
 </div>
+
 
 <div>
 
@@ -418,17 +448,23 @@ Generate Document
 
 <div class="total-row">
 <span>Subtotal</span>
-<strong>Rs <span id="outSubtotal">0.00</span></strong>
+<strong>
+Rs <span id="outSubtotal">0.00</span>
+</strong>
 </div>
 
 <div class="total-row">
 <span>Discount</span>
-<strong>Rs <span id="outDiscount">0.00</span></strong>
+<strong>
+Rs <span id="outDiscount">0.00</span>
+</strong>
 </div>
 
 <div class="total-row grand-total">
 <span>Total</span>
-<strong>Rs <span id="outTotal">0.00</span></strong>
+<strong>
+Rs <span id="outTotal">0.00</span>
+</strong>
 </div>
 
 </div>
@@ -436,7 +472,9 @@ Generate Document
 
 <div class="actions">
 
-<button class="success" onclick="window.print()">
+<button
+class="success"
+onclick="window.print()">
 Print / Save PDF
 </button>
 
@@ -450,288 +488,441 @@ Print / Save PDF
 <script>
 
 let currentType = "Invoice";
+
 let itemCounter = 0;
 
 
-/* -------------------------
+/* =========================
    DOCUMENT TYPE
-------------------------- */
+========================= */
 
 function setType(type){
 
   currentType = type;
 
-  const invoiceTab = document.getElementById("invoiceTab");
-  const quotationTab = document.getElementById("quotationTab");
+  document
+    .getElementById("invoiceTab")
+    .classList.remove("active");
 
-  invoiceTab.classList.remove("active");
-  quotationTab.classList.remove("active");
+  document
+    .getElementById("quotationTab")
+    .classList.remove("active");
+
 
   if(type === "Invoice"){
-    invoiceTab.classList.add("active");
+
+    document
+      .getElementById("invoiceTab")
+      .classList.add("active");
+
   }else{
-    quotationTab.classList.add("active");
+
+    document
+      .getElementById("quotationTab")
+      .classList.add("active");
+
   }
+
+
+  updateDocumentNumber();
 
 }
 
 
-/* -------------------------
+/* =========================
+   AUTOMATIC NUMBER
+========================= */
+
+function getNextNumber(type){
+
+  let storageKey =
+    type === "Invoice"
+      ? "invoiceNumber"
+      : "quotationNumber";
+
+
+  let current =
+    parseInt(localStorage.getItem(storageKey)) || 0;
+
+
+  let next = current + 1;
+
+
+  return type === "Invoice"
+    ? "INV-" + String(next).padStart(3,"0")
+    : "QUO-" + String(next).padStart(3,"0");
+}
+
+
+function updateDocumentNumber(){
+
+  document.getElementById("documentNumber").value =
+    getNextNumber(currentType);
+
+}
+
+
+/* =========================
    ADD ITEM
-------------------------- */
+========================= */
 
 function addItem(){
 
   itemCounter++;
 
-  const items = document.getElementById("items");
+  const items =
+    document.getElementById("items");
 
-  const div = document.createElement("div");
+  const div =
+    document.createElement("div");
 
   div.className = "item";
 
   div.id = "item-" + itemCounter;
+
 
   div.innerHTML = `
 
     <div class="item-grid">
 
       <div>
-        <label>Product / Service</label>
+
+        <label>
+          Product / Service
+        </label>
+
         <input
           class="item-name"
           placeholder="Product name"
-          oninput="calculateTotal()"
-        >
+          oninput="calculateTotal()">
+
       </div>
 
+
       <div>
+
         <label>Qty</label>
+
         <input
           type="number"
           class="item-qty"
           value="1"
           min="1"
-          oninput="calculateTotal()"
-        >
+          oninput="calculateTotal()">
+
       </div>
 
+
       <div>
+
         <label>Price</label>
+
         <input
           type="number"
           class="item-price"
           value="0"
           min="0"
-          oninput="calculateTotal()"
-        >
+          oninput="calculateTotal()">
+
       </div>
+
 
       <button
         class="remove"
         onclick="removeItem(${itemCounter})">
+
         Remove
+
       </button>
 
     </div>
 
   `;
 
+
   items.appendChild(div);
 
   calculateTotal();
+
 }
 
 
-/* -------------------------
+/* =========================
    REMOVE ITEM
-------------------------- */
+========================= */
 
 function removeItem(id){
 
-  const item = document.getElementById("item-" + id);
+  const item =
+    document.getElementById("item-" + id);
 
   if(item){
     item.remove();
   }
 
   calculateTotal();
+
 }
 
 
-/* -------------------------
-   CALCULATE TOTAL
-------------------------- */
+/* =========================
+   CALCULATE
+========================= */
 
 function calculateTotal(){
 
   let subtotal = 0;
 
-  const items = document.querySelectorAll(".item");
 
-  items.forEach(item => {
+  document
+    .querySelectorAll(".item")
+    .forEach(item => {
 
-    const qty =
-      parseFloat(item.querySelector(".item-qty").value) || 0;
+      const qty =
+        parseFloat(
+          item.querySelector(".item-qty").value
+        ) || 0;
 
-    const price =
-      parseFloat(item.querySelector(".item-price").value) || 0;
 
-    subtotal += qty * price;
+      const price =
+        parseFloat(
+          item.querySelector(".item-price").value
+        ) || 0;
 
-  });
+
+      subtotal += qty * price;
+
+    });
 
 
   const discount =
-    parseFloat(document.getElementById("discount").value) || 0;
+    parseFloat(
+      document.getElementById("discount").value
+    ) || 0;
 
-  const total = Math.max(subtotal - discount, 0);
+
+  const total =
+    Math.max(subtotal - discount, 0);
 
 
-  document.getElementById("subtotal").textContent =
+  document.getElementById("subtotal")
+    .textContent =
     subtotal.toFixed(2);
 
-  document.getElementById("discountAmount").textContent =
+
+  document.getElementById("discountAmount")
+    .textContent =
     discount.toFixed(2);
 
-  document.getElementById("total").textContent =
+
+  document.getElementById("total")
+    .textContent =
     total.toFixed(2);
 
 }
 
 
-/* -------------------------
+/* =========================
    GENERATE DOCUMENT
-------------------------- */
+========================= */
 
 function generateDocument(){
 
   calculateTotal();
 
-  const businessName =
-    document.getElementById("businessName").value;
 
-  const businessPhone =
-    document.getElementById("businessPhone").value;
-
-  const businessAddress =
-    document.getElementById("businessAddress").value;
-
-  const customerName =
-    document.getElementById("customerName").value;
-
-  const customerPhone =
-    document.getElementById("customerPhone").value;
-
-  const documentNumber =
+  const number =
     document.getElementById("documentNumber").value;
 
-  const documentDate =
-    document.getElementById("documentDate").value;
 
-  const discount =
-    parseFloat(document.getElementById("discount").value) || 0;
+  /*
+    Number ko permanently save kar do
+    sirf jab document generate ho
+  */
+
+  let storageKey =
+    currentType === "Invoice"
+      ? "invoiceNumber"
+      : "quotationNumber";
 
 
-  document.getElementById("outputTitle").textContent =
+  let savedNumber =
+    parseInt(localStorage.getItem(storageKey)) || 0;
+
+
+  let currentNumber =
+    parseInt(number.split("-")[1]) || 1;
+
+
+  if(currentNumber > savedNumber){
+
+    localStorage.setItem(
+      storageKey,
+      currentNumber
+    );
+
+  }
+
+
+  document.getElementById("outputTitle")
+    .textContent =
     currentType.toUpperCase();
 
-  document.getElementById("outBusiness").textContent =
-    businessName || "Business Name";
 
-  document.getElementById("outPhone").textContent =
-    businessPhone || "";
+  document.getElementById("outBusiness")
+    .textContent =
+    document.getElementById("businessName").value
+    || "Business Name";
 
-  document.getElementById("outAddress").textContent =
-    businessAddress || "";
 
-  document.getElementById("outCustomer").textContent =
-    customerName || "-";
+  document.getElementById("outPhone")
+    .textContent =
+    document.getElementById("businessPhone").value
+    || "";
 
-  document.getElementById("outCustomerPhone").textContent =
-    customerPhone || "-";
 
-  document.getElementById("outNumber").textContent =
-    documentNumber || "-";
+  document.getElementById("outAddress")
+    .textContent =
+    document.getElementById("businessAddress").value
+    || "";
 
-  document.getElementById("outDate").textContent =
-    documentDate || "-";
+
+  document.getElementById("outCustomer")
+    .textContent =
+    document.getElementById("customerName").value
+    || "-";
+
+
+  document.getElementById("outCustomerPhone")
+    .textContent =
+    document.getElementById("customerPhone").value
+    || "-";
+
+
+  document.getElementById("outNumber")
+    .textContent =
+    number;
+
+
+  document.getElementById("outDate")
+    .textContent =
+    document.getElementById("documentDate").value
+    || "-";
 
 
   const outItems =
     document.getElementById("outItems");
 
+
   outItems.innerHTML = "";
+
 
   let subtotal = 0;
 
 
-  document.querySelectorAll(".item").forEach(item => {
+  document
+    .querySelectorAll(".item")
+    .forEach(item => {
 
-    const name =
-      item.querySelector(".item-name").value || "Item";
-
-    const qty =
-      parseFloat(item.querySelector(".item-qty").value) || 0;
-
-    const price =
-      parseFloat(item.querySelector(".item-price").value) || 0;
-
-    const lineTotal = qty * price;
-
-    subtotal += lineTotal;
+      const name =
+        item.querySelector(".item-name").value
+        || "Item";
 
 
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-
-      <td>${escapeHTML(name)}</td>
-
-      <td>${qty}</td>
-
-      <td>Rs ${price.toFixed(2)}</td>
-
-      <td>Rs ${lineTotal.toFixed(2)}</td>
-
-    `;
-
-    outItems.appendChild(row);
-
-  });
+      const qty =
+        parseFloat(
+          item.querySelector(".item-qty").value
+        ) || 0;
 
 
-  const total = Math.max(subtotal - discount, 0);
+      const price =
+        parseFloat(
+          item.querySelector(".item-price").value
+        ) || 0;
 
 
-  document.getElementById("outSubtotal").textContent =
+      const lineTotal =
+        qty * price;
+
+
+      subtotal += lineTotal;
+
+
+      const row =
+        document.createElement("tr");
+
+
+      row.innerHTML = `
+
+        <td>${escapeHTML(name)}</td>
+
+        <td>${qty}</td>
+
+        <td>Rs ${price.toFixed(2)}</td>
+
+        <td>Rs ${lineTotal.toFixed(2)}</td>
+
+      `;
+
+
+      outItems.appendChild(row);
+
+    });
+
+
+  const discount =
+    parseFloat(
+      document.getElementById("discount").value
+    ) || 0;
+
+
+  const total =
+    Math.max(subtotal - discount, 0);
+
+
+  document.getElementById("outSubtotal")
+    .textContent =
     subtotal.toFixed(2);
 
-  document.getElementById("outDiscount").textContent =
+
+  document.getElementById("outDiscount")
+    .textContent =
     discount.toFixed(2);
 
-  document.getElementById("outTotal").textContent =
+
+  document.getElementById("outTotal")
+    .textContent =
     total.toFixed(2);
 
 
-  document.getElementById("output").style.display =
+  document.getElementById("output")
+    .style.display =
     "block";
 
 
-  document.getElementById("output").scrollIntoView({
-    behavior:"smooth"
-  });
+  /*
+    Next number ready
+  */
+
+  updateDocumentNumber();
+
+
+  document.getElementById("output")
+    .scrollIntoView({
+      behavior:"smooth"
+    });
 
 }
 
 
-/* -------------------------
-   SECURITY
-------------------------- */
+/* =========================
+   HTML SECURITY
+========================= */
 
 function escapeHTML(text){
 
-  const div = document.createElement("div");
+  const div =
+    document.createElement("div");
 
   div.textContent = text;
 
@@ -740,9 +931,9 @@ function escapeHTML(text){
 }
 
 
-/* -------------------------
-   SAVE BUSINESS PROFILE
-------------------------- */
+/* =========================
+   BUSINESS PROFILE SAVE
+========================= */
 
 function saveBusinessProfile(){
 
@@ -766,19 +957,24 @@ function saveBusinessProfile(){
   );
 
 
-  alert("Business profile saved successfully!");
+  alert(
+    "Business profile saved successfully!"
+  );
 
 }
 
 
-/* -------------------------
+/* =========================
    LOAD BUSINESS PROFILE
-------------------------- */
+========================= */
 
 function loadBusinessProfile(){
 
   const saved =
-    localStorage.getItem("invoiceBusinessProfile");
+    localStorage.getItem(
+      "invoiceBusinessProfile"
+    );
+
 
   if(!saved){
     return;
@@ -791,57 +987,87 @@ function loadBusinessProfile(){
       JSON.parse(saved);
 
 
-    document.getElementById("businessName").value =
+    document.getElementById("businessName")
+      .value =
       profile.name || "";
 
-    document.getElementById("businessPhone").value =
+
+    document.getElementById("businessPhone")
+      .value =
       profile.phone || "";
 
-    document.getElementById("businessAddress").value =
+
+    document.getElementById("businessAddress")
+      .value =
       profile.address || "";
+
 
   }catch(error){
 
-    console.log("Saved profile could not be loaded.");
+    console.log(
+      "Saved profile could not be loaded."
+    );
 
   }
 
 }
 
 
-/* -------------------------
+/* =========================
    CLEAR PROFILE
-------------------------- */
+========================= */
 
 function clearBusinessProfile(){
 
-  localStorage.removeItem("invoiceBusinessProfile");
+  localStorage.removeItem(
+    "invoiceBusinessProfile"
+  );
 
-  document.getElementById("businessName").value = "";
 
-  document.getElementById("businessPhone").value = "";
+  document.getElementById("businessName")
+    .value = "";
 
-  document.getElementById("businessAddress").value = "";
 
-  alert("Saved business profile cleared.");
+  document.getElementById("businessPhone")
+    .value = "";
+
+
+  document.getElementById("businessAddress")
+    .value = "";
+
+
+  alert(
+    "Saved business profile cleared."
+  );
 
 }
 
 
-/* -------------------------
-   INITIAL SETUP
-------------------------- */
+/* =========================
+   START
+========================= */
 
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
 
-  loadBusinessProfile();
+    loadBusinessProfile();
 
-  document.getElementById("documentDate").value =
-    new Date().toISOString().split("T")[0];
 
-  addItem();
+    document.getElementById("documentDate")
+      .value =
+      new Date()
+      .toISOString()
+      .split("T")[0];
 
-});
+
+    addItem();
+
+
+    updateDocumentNumber();
+
+  }
+);
 
 </script>
 
